@@ -1,0 +1,24 @@
+function copyData() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Giavang");
+  var sourceRange = sheet.getRange("B4:C4");
+  var sourceData = sourceRange.getValues();
+  
+  // Get the last row in column F
+  var columnF = sheet.getRange("F1:F").getValues();
+  var lastRow = columnF.filter(String).length;
+  
+  var targetRange = sheet.getRange(lastRow + 1, 6, 1, 2); // Column F and G
+  var timestampRange = sheet.getRange(lastRow + 1, 5); // Column E
+  
+  targetRange.setValues(sourceData);
+  timestampRange.setValue(new Date());
+}
+
+function createTimeDrivenTriggers() {
+  // Trigger every day at 7PM.
+  ScriptApp.newTrigger('copyData')
+      .timeBased()
+      .atHour(19)
+      .everyDays(1) // Frequency is every day (can be changed to every 2 days, every 3 days, etc.)
+      .create();
+}
